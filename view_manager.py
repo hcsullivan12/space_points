@@ -1,7 +1,12 @@
+import pyqtgraph.opengl as gl
+
 from PyQt4 import QtCore, QtGui
 
 import fileReader
 import viewport
+
+import math
+import numpy
 
 class view_manager(QtCore.QObject):
 
@@ -19,6 +24,8 @@ class view_manager(QtCore.QObject):
 		self._events = []
 		self._eventItr = 0
 		self._currentData = []
+
+		self._gl_hits = None
 
 		self._detectorView = viewport.viewport()
 
@@ -43,15 +50,40 @@ class view_manager(QtCore.QObject):
 	def subrun(self):
 		return self._currentData._subrun
 
+	def previousEvent(self):
+		# Move to last event
+		self._eventItr  = self._eventItr - 1
+		# Make sure eventItr > 0 and loops back
+                if self._eventItr <= 0:
+                        self._eventItr = len(self._events)
+		self.setCurrentData()
+
+
 	def nextEvent(self):
-		print "In nextEvent"
-		if self._eventItr >= len(self._events):
-			self._eventItr = 0
+		# Move to next event
 		self._eventItr = self._eventItr + 1
+		# Make sure eventItr < number of events and loops back
+		if self._eventItr > len(self._events):
+			self._eventItr = 1
 		self.setCurrentData()
 
 	def setCurrentData(self):
-		print "Setting current Data"
-		print "EventItr is ", self._eventItr
-		print "Length of events is ", len(self._events)
+		# Set the data to look at on next update
 		self._currentData = self._events[self._eventItr - 1]
+	
+	def updateVoxel(self):
+		# Remove any old data
+		if self._gl_hits is not None:
+                        self._detectorView.removeItem(self._gl_hits)
+                        self._gl_hits = None
+
+		# Get new data
+		pt_list = []
+		for point in self._currentData._data:
+			pt_list.append( point )
+
+		pts = numpy.array(pt_list)
+		hits = gl.GLScatterPlotItem(pos=pts,color=(1,0,0,1), size=1, pxMode=False)
+		self._gl_hits = hits
+		self._detectorView.addItem(self._gl_hits)
+		self._detectorView._background_items.append(self._gl_hits)

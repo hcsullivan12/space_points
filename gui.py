@@ -54,7 +54,6 @@ class gui(QtGui.QWidget):
                 self._nextButton.clicked.connect(self.nextEvent)
                 self._previousButton = QtGui.QPushButton("Previous")
                 self._previousButton.clicked.connect(self.previousEvent)
-                self._previousButton = QtGui.QPushButton("Previous")
                 self._entryBox = QtGui.QLineEdit()
                 self._entryBox.setToolTip("Enter an event to skip to")
                 self._runLabel = QtGui.QLabel("Run: ")
@@ -92,6 +91,8 @@ class gui(QtGui.QWidget):
 		return
 
 	def previousEvent(self):
+		self._view_manager.previousEvent()
+		self._view_manager.eventChanged.emit()
 		return
 
 	def update(self):
@@ -103,6 +104,5 @@ class gui(QtGui.QWidget):
                 subrunLabel = "Subrun: " + str(self._view_manager.subrun())
                 self._subrunLabel.setText(subrunLabel)
 
-                '''# Update the detector and plot view
+                # Update the detector and plot view
                 self._view_manager.updateVoxel()
-                self._view_manager.updatePlot()'''
