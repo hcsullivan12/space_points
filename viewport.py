@@ -14,12 +14,11 @@ class viewport(gl.GLViewWidget):
 	def __init__(self):
 		super(viewport, self).__init__()
 
-		self._x = 50
+		self._x = 60
                 self._y = 36
                 self._z = 100
 
-
-		self.setBackgroundColor((0,0,0,255))
+		self.setBackgroundColor((255,255,255,255))
                 self._background_items =  []
                 self.drawDetector()
                 self.drawAxes()
@@ -51,7 +50,8 @@ class viewport(gl.GLViewWidget):
                         self.removeItem(_item)
                         self._background_items = []
 
-		self._det_outline = gl.GLLinePlotItem(pos=pts,color=(1,1,1,1), width=3)
+		self._det_outline = gl.GLLinePlotItem(pos=pts,color=(0,0,0,255), width=3)
+		self._det_outline.setGLOptions('translucent')
                 self.addItem(self._det_outline)
                 self._background_items.append(self._det_outline)
 

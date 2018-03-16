@@ -1,4 +1,5 @@
 import pyqtgraph.opengl as gl
+import pyqtgraph as pg
 
 from PyQt4 import QtCore, QtGui
 
@@ -83,7 +84,8 @@ class view_manager(QtCore.QObject):
 			pt_list.append( point )
 
 		pts = numpy.array(pt_list)
-		hits = gl.GLScatterPlotItem(pos=pts,color=(1,0,0,1), size=1, pxMode=False)
+		hits = gl.GLScatterPlotItem(pos=pts,color=(255,0,0,255), size=1, pxMode=False)
+		hits.setGLOptions('translucent')
 		self._gl_hits = hits
 		self._detectorView.addItem(self._gl_hits)
 		self._detectorView._background_items.append(self._gl_hits)
