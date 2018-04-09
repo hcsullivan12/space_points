@@ -18,23 +18,26 @@ class fileReader():
 
 			line = f.readline()
 			line_vec = line.split()
-
+			
 			# Get the first event information
 			while True:
-				
 				if line_vec[0] == 'Run':
+				
 					# Create event
 					_tpc_event = tpc_event.tpc_event()
 					# Run
 					run = line_vec[1]
+					#print "FOUND RUN ", run
 					# Subrun
 					line = f.readline()
 					line_vec = line.split()
 					subrun = line_vec[1]
+					#print "FOUND SUBRUN ", subrun
 					# Event
 					line = f.readline()
                                         line_vec = line.split()
 					event = line_vec[1]
+					#print "FOUND EVENT ", event
 					
 					_tpc_event._run = run
 					_tpc_event._subrun = subrun

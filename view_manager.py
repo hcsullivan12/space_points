@@ -68,6 +68,21 @@ class view_manager(QtCore.QObject):
 			self._eventItr = 1
 		self.setCurrentData()
 
+	def goToEvent(self, event):
+		# Look for event in data
+		foundEvent = False
+		evtItr = 1
+		for evt in self._events:
+			if int(evt._event) == int(event):
+				self._eventItr = evtItr
+				foundEvent = True
+			evtItr = evtItr + 1
+		if foundEvent:
+			self.setCurrentData()
+			self.eventChanged.emit()
+		else: 
+			print "Error, couldn't find event"
+
 	def setCurrentData(self):
 		# Set the data to look at on next update
 		self._currentData = self._events[self._eventItr - 1]

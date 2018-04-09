@@ -55,7 +55,8 @@ class gui(QtGui.QWidget):
                 self._previousButton = QtGui.QPushButton("Previous")
                 self._previousButton.clicked.connect(self.previousEvent)
                 self._entryBox = QtGui.QLineEdit()
-                self._entryBox.setToolTip("Enter an event to skip to")
+                self._entryBox.setToolTip("Enter an event to skip to (press enter)")
+		self._entryBox.returnPressed.connect(self.goToEvent)
                 self._runLabel = QtGui.QLabel("Run: ")
                 self._eventLabel = QtGui.QLabel("Event: ")
                 self._subrunLabel = QtGui.QLabel("Subrun: ")
@@ -94,6 +95,14 @@ class gui(QtGui.QWidget):
 		self._view_manager.previousEvent()
 		self._view_manager.eventChanged.emit()
 		return
+
+	def goToEvent(self):
+		try:
+		    event = int(self._entryBox.text())
+		except:
+		    print "Error, must enter an integer"
+		    return
+		self._view_manager.goToEvent(event)
 
 	def update(self):
                 # Change the labels
