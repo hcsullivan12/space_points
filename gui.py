@@ -60,6 +60,8 @@ class gui(QtGui.QWidget):
                 self._runLabel = QtGui.QLabel("Run: ")
                 self._eventLabel = QtGui.QLabel("Event: ")
                 self._subrunLabel = QtGui.QLabel("Subrun: ")
+		self._eventUpdateButton = QtGui.QPushButton("Start")
+		self._eventUpdateButton.clicked.connect(self.eventUpdateButtonHandler)
 
                 # Put into layout
                 self._eventControlBox = QtGui.QVBoxLayout()
@@ -74,8 +76,19 @@ class gui(QtGui.QWidget):
 		self._eventControlBox.addWidget(self._runLabel)
 		self._eventControlBox.addWidget(self._subrunLabel)
                 self._eventControlBox.addWidget(self._eventLabel)
+		self._eventControlBox.addWidget(self._eventUpdateButton)
 
                 return self._eventControlBox
+
+	def eventUpdateButtonHandler(self):
+		if self._view_manager.isCycling():
+                        self._view_manager.stopCycle()
+                        self._eventUpdateButton.setText("Start")
+
+                else:
+                        delay = 2
+                        self._eventUpdateButton.setText("Pause")
+                        self._view_manager.startCycle(delay)
 
 	def getQuitButton(self):
 		self._quitButton = QtGui.QPushButton("Quit")

@@ -6,6 +6,7 @@ from PyQt4 import QtCore, QtGui
 import fileReader
 import viewport
 
+import threading
 import math
 import numpy
 
@@ -32,6 +33,34 @@ class view_manager(QtCore.QObject):
 
 		self._layout = QtGui.QVBoxLayout()
 		self._layout.addWidget(self._detectorView)
+
+		self._isCycling = False
+
+	def startCycle(self, delay):
+                print "Starting Cycle!"
+                self._isCycling = True
+                #self._stopCycleFlag = threading.Event()
+                #self._cycleWatcher = delayTimer(self._stopCycleFlag, delay)
+                #self._cycleWatcher.delayExpired.connect(self.next)
+                #self._cycleWatcher.start()
+                timer = threading.Timer(2, self.next)
+                timer.start()
+
+	def next(self):
+                if self._isCycling:
+                        timer = threading.Timer(2, self.next)
+                        timer.start()
+			# Set the next event
+			self.nextEvent()
+                        # self.goToEvent(self._event + 1)
+			self.eventChanged.emit()
+
+        def stopCycle(self):
+                print "Stopping cycle!"
+                self._isCycling = False
+
+	def isCycling(self):
+                return self._isCycling
 
 	def setInputFile(self, input_file):
 		self._input_file = input_file
@@ -63,6 +92,7 @@ class view_manager(QtCore.QObject):
 	def nextEvent(self):
 		# Move to next event
 		self._eventItr = self._eventItr + 1
+
 		# Make sure eventItr < number of events and loops back
 		if self._eventItr > len(self._events):
 			self._eventItr = 1
@@ -81,7 +111,7 @@ class view_manager(QtCore.QObject):
 			self.setCurrentData()
 			self.eventChanged.emit()
 		else: 
-			print "Error, couldn't find event"
+			print "Error, couldn't find event", event
 
 	def setCurrentData(self):
 		# Set the data to look at on next update
@@ -99,7 +129,7 @@ class view_manager(QtCore.QObject):
 			pt_list.append( point )
 
 		pts = numpy.array(pt_list)
-		hits = gl.GLScatterPlotItem(pos=pts,color=(0,0,255,255), size=1, pxMode=False)
+		hits = gl.GLScatterPlotItem(pos=pts,color=(0,0,255,255), size=0.5, pxMode=False)
 		hits.setGLOptions('translucent')
 		self._gl_hits = hits
 		self._detectorView.addItem(self._gl_hits)

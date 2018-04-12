@@ -18,6 +18,8 @@ class viewport(gl.GLViewWidget):
                 self._y = 36
                 self._z = 100
 
+	        self.pan(self._x/2, 0, self._z/2)
+
 		self.setBackgroundColor((255,255,255,255))
                 self._background_items =  []
                 self.drawDetector()
