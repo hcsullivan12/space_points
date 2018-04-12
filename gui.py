@@ -43,7 +43,7 @@ class gui(QtGui.QWidget):
 
                 self._leftWidget = QtGui.QWidget()
                 self._leftWidget.setLayout(self._leftLayout)
-                self._leftWidget.setMaximumWidth(200)
+                self._leftWidget.setMaximumWidth(250)
                 self._leftWidget.setMinimumWidth(100)
 
 		return self._leftWidget
