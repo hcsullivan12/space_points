@@ -86,9 +86,8 @@ class gui(QtGui.QWidget):
                         self._eventUpdateButton.setText("Start")
 
                 else:
-                        delay = 2
                         self._eventUpdateButton.setText("Pause")
-                        self._view_manager.startCycle(delay)
+                        self._view_manager.startCycle()
 
 	def getQuitButton(self):
 		self._quitButton = QtGui.QPushButton("Quit")
@@ -120,11 +119,16 @@ class gui(QtGui.QWidget):
 	def update(self):
                 # Change the labels
                 eventLabel = "Event: " + str(self._view_manager.event())
+		#print "Event", self._view_manager.event()
                 self._eventLabel.setText(eventLabel)
+
                 runLabel = "Run: " + str(self._view_manager.run())
+                #print "Run", self._view_manager.run()
                 self._runLabel.setText(runLabel)
+
                 subrunLabel = "Subrun: " + str(self._view_manager.subrun())
                 self._subrunLabel.setText(subrunLabel)
+	        #print "Subrun", self._view_manager.subrun()
 
                 # Update the detector and plot view
                 self._view_manager.updateVoxel()

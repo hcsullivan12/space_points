@@ -36,7 +36,7 @@ class view_manager(QtCore.QObject):
 
 		self._isCycling = False
 
-	def startCycle(self, delay):
+	def startCycle(self):
                 print "Starting Cycle!"
                 self._isCycling = True
                 #self._stopCycleFlag = threading.Event()

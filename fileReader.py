@@ -26,18 +26,17 @@ class fileReader():
 					# Create event
 					_tpc_event = tpc_event.tpc_event()
 					# Run
-					run = line_vec[1]
-					#print "FOUND RUN ", run
+					run = line_vec[0]
+
 					# Subrun
 					line = f.readline()
 					line_vec = line.split()
 					subrun = line_vec[1]
-					#print "FOUND SUBRUN ", subrun
+					
 					# Event
 					line = f.readline()
                                         line_vec = line.split()
 					event = line_vec[1]
-					#print "FOUND EVENT ", event
 					
 					_tpc_event._run = run
 					_tpc_event._subrun = subrun
@@ -56,9 +55,13 @@ class fileReader():
 						points = map(float, line_vec)
 						_tpc_event._data.append(points)
 						
+                                        if not line:
+                                        	break
+
+					if len(_tpc_event._data) == 0: continue
+
 					# Obtained all data for event, store in events list
 					self._events.append(_tpc_event)
-					if not line: break
 
 	def printData(self):
 		print "In printData\n"
