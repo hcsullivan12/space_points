@@ -21,6 +21,10 @@ class view_manager(QtCore.QObject):
 		self._run = 0
 		self._subrun = 0
 
+		self._xCenter = 0
+		self._yCenter = 0
+		self._zCenter = 0
+
 		self._fileReader = None
 		self._input_file = None
 		self._events = []
@@ -134,3 +138,7 @@ class view_manager(QtCore.QObject):
 		self._gl_hits = hits
 		self._detectorView.addItem(self._gl_hits)
 		self._detectorView._background_items.append(self._gl_hits)
+
+	def setCenter(self, x, y, z):
+		self._detectorView.setCenter(x, y, z)
+		#self.updateVoxel()

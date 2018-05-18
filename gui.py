@@ -5,9 +5,13 @@ class gui(QtGui.QWidget):
 
 	eventChanged = QtCore.pyqtSignal()
 	
-	def __init(self, manager):
+	def __init__(self):
 		super(gui, self).__init__()
 		self._view_manager = None
+
+                self._defaultXView = 24
+                self._defaultYView = 0
+                self._defaultZView = 45
 
 	def setManager(self, manager):
 		self._view_manager = manager
@@ -31,13 +35,16 @@ class gui(QtGui.QWidget):
                 self.show()
 
 	def getLeftLayout(self):
-		event_control = self.getEventControlButtons()
-                quit_control = self.getQuitButton()
+		event_control = self.getEventControlLayout()
+		view_control  = self.getViewControlLayout() 
+                quit_control  = self.getQuitButton()
 
                 # New layout
                 self._leftLayout = QtGui.QVBoxLayout()
                 self._leftLayout.addLayout(event_control)
                 self._leftLayout.addStretch(1)
+		self._leftLayout.addLayout(view_control)
+		self._leftLayout.addStretch(1)
                 self._leftLayout.addWidget(quit_control)
                 self._leftLayout.setAlignment(QtCore.Qt.AlignLeft)
 
@@ -48,7 +55,84 @@ class gui(QtGui.QWidget):
 
 		return self._leftWidget
 
-	def getEventControlButtons(self):
+	def getViewControlLayout(self):
+		self._viewLabel = QtGui.QLabel("View Controls")
+		font = QtGui.QFont()
+		font.setBold(True)
+		self._viewLabel.setFont(font)
+		self._viewLabel.setAlignment(QtCore.Qt.AlignCenter)
+
+		self._setCenterLabel = QtGui.QLabel("Set Camera Center")
+		self._setCenterLabel.setAlignment(QtCore.Qt.AlignCenter)
+
+		self._xLabel = QtGui.QLabel("X: ")
+		self._xEntryBox = QtGui.QLineEdit()
+		self._xEntryBox.setText(str(self._defaultXView))
+		#self._xEntryBox.returnPressed.connect(self.setViewX)
+		self._yLabel = QtGui.QLabel("Y: ")
+		self._yEntryBox = QtGui.QLineEdit()
+		self._yEntryBox.setText(str(self._defaultYView))
+                #self._yEntryBox.returnPressed.connect(self.setViewY)
+		self._zLabel = QtGui.QLabel("Z: ")
+		self._zEntryBox = QtGui.QLineEdit()
+		self._zEntryBox.setText(str(self._defaultZView))
+                #self._zEntryBox.returnPressed.connect(self.setViewZ)
+
+		self._unitLabel1 = QtGui.QLabel(" cm")		
+		self._unitLabel2 = QtGui.QLabel(" cm")
+		self._unitLabel3 = QtGui.QLabel(" cm")
+
+		self._line1 = QtGui.QHBoxLayout()
+                self._line1.addWidget(self._xLabel)
+                self._line1.addWidget(self._xEntryBox)
+		self._line1.addWidget(self._unitLabel1)
+		self._line2 = QtGui.QHBoxLayout()
+                self._line2.addWidget(self._yLabel)
+		self._line2.addWidget(self._yEntryBox)
+		self._line2.addWidget(self._unitLabel2)
+		self._line3 = QtGui.QHBoxLayout()
+                self._line3.addWidget(self._zLabel)
+		self._line3.addWidget(self._zEntryBox)
+		self._line3.addWidget(self._unitLabel3)
+
+		self._setViewButton = QtGui.QPushButton("Set View")
+		self._setViewButton.clicked.connect(self.setView)
+
+		self._setDefaultButton = QtGui.QPushButton("Set Default View")
+		self._setDefaultButton.clicked.connect(self.setDefaultView)
+
+		# Put into layout
+		self._viewControlBox = QtGui.QVBoxLayout()
+		self._viewControlBox.addWidget(self._viewLabel)
+		self._viewControlBox.addWidget(self._setCenterLabel)
+		self._viewControlBox.addLayout(self._line1)
+		self._viewControlBox.addLayout(self._line2)
+		self._viewControlBox.addLayout(self._line3)
+		self._viewControlBox.addWidget(self._setViewButton)
+		self._viewControlBox.addWidget(self._setDefaultButton)
+
+		return self._viewControlBox
+
+	def setView(self):
+		x = self._xEntryBox.text()
+		y = self._yEntryBox.text()
+		z = self._zEntryBox.text()
+		self._view_manager.setCenter(x, y, z)
+
+	def setDefaultView(self):
+		self._xEntryBox.setText(str(self._defaultXView))
+		self._yEntryBox.setText(str(self._defaultYView))
+		self._zEntryBox.setText(str(self._defaultZView))
+		
+		self.setView()
+
+	def getEventControlLayout(self):
+		self._eventControlLabel = QtGui.QLabel("Event Controls")
+                font = QtGui.QFont()
+                font.setBold(True)
+                self._eventControlLabel.setFont(font)
+                self._eventControlLabel.setAlignment(QtCore.Qt.AlignCenter)
+
 		self._goToLabel = QtGui.QLabel("Go to: ")
                 self._nextButton = QtGui.QPushButton("Next")
                 self._nextButton.clicked.connect(self.nextEvent)
@@ -70,6 +154,7 @@ class gui(QtGui.QWidget):
                 self._grid.addWidget(self._goToLabel)
                 self._grid.addWidget(self._entryBox)
 
+		self._eventControlBox.addWidget(self._eventControlLabel)
                 self._eventControlBox.addLayout(self._grid)
                 self._eventControlBox.addWidget(self._nextButton)
                 self._eventControlBox.addWidget(self._previousButton)

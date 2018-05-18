@@ -14,11 +14,17 @@ class viewport(gl.GLViewWidget):
 	def __init__(self):
 		super(viewport, self).__init__()
 
-		self._x = 60
-                self._y = 36
-                self._z = 100
+		# Detector dimensions
+		self._x = 48
+                self._y = 40/2
+                self._z = 90
 
-	        self.pan(self._x/2, 0, self._z/2)
+		# Center view coordinates
+		self._xCenter = self._x/2
+		self._yCenter = 0
+		self._zCenter = self._z/2
+
+	        self.pan(self._xCenter, self._yCenter, self._zCenter)
 
 		self.setBackgroundColor((255,255,255,255))
                 self._background_items =  []
@@ -37,15 +43,6 @@ class viewport(gl.GLViewWidget):
 				    [self._x,-self._y,self._z], [self._x,-self._y,0],
 			            [self._x,self._y,0], [self._x,self._y,self._z],
 				    [0,self._y,self._z], [0,self._y,0] ],
-				    #[self._x,-self._y,self._z], [self._x,self._y,self._z],
-				    #[0,self._y,0], [self._x,self._y,0],
-				    #[0,self._y,0], [0,self._y,self._z],
-				    #[self._x,self._y,0], [self._x,self._y,self._z],
-				    #[0,self._y,self._z], [self._x,self._y,self._z],
-				    #[0,-self._y,0], [self._x,-self._y,0],
-                                    #[0,-self._y,0], [0,-self._y,self._z],
-                                    #[self._x,-self._y,0], [self._x,-self._y,self._z],
-                                    #[0,-self._y,self._z], [self._x,-self._y,self._z] ],
 				    dtype=float)	
 
 		for _item in self._background_items:
@@ -62,3 +59,10 @@ class viewport(gl.GLViewWidget):
                 self._axes.setSize(self._x,self._y,self._z)
                 self.addItem(self._axes)
                 self._background_items.append(self._axes)
+
+	def setCenter(self, x, y, z):
+		self.opts['center'] = QtGui.QVector3D(0,0,0)
+		self._xCenter = float(x)
+		self._yCenter = float(y)
+		self._zCenter = float(z)
+		self.pan(self._xCenter, self._yCenter, self._zCenter)
