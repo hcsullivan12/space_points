@@ -26,7 +26,7 @@ class fileReader():
 					# Create event
 					_tpc_event = tpc_event.tpc_event()
 					# Run
-					run = line_vec[0]
+					run = line_vec[1]
 
 					# Subrun
 					line = f.readline()

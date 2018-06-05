@@ -60,7 +60,7 @@ class view_manager(QtCore.QObject):
 			self.eventChanged.emit()
 
         def stopCycle(self):
-                print "Stopping cycle!"
+                print "Stopping Cycle!"
                 self._isCycling = False
 
 	def isCycling(self):
